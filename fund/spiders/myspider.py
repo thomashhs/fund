@@ -1,8 +1,9 @@
 import scrapy
 from fund.items import FundItem
 from fund.items import FundDetailItem
+import re
 
-###获取易方达基金情况
+###获取易方达基金总体情况
 class MySpider1(scrapy.Spider):
     # 设置name
     name = "fundspider"
@@ -14,7 +15,7 @@ class MySpider1(scrapy.Spider):
     # 编写爬取方法
     def parse(self, response):
         item = FundItem()
-        cnt = 0
+        #股票型或混合型基金
         for line in response.xpath('//*[@id="allFundTable"]/tbody/tr[@data-type="01" or @data-type="02"]'):
             # 初始化item对象保存爬取的信息
             # 这部分是爬取部分，使用xpath的方式选择信息，具体方法根据网页结构而定
@@ -22,8 +23,8 @@ class MySpider1(scrapy.Spider):
                 './@data-name').extract()
             item['fund_id'] = line.xpath(
                 './@data-code').extract()
-            item['fund_time'] = line.xpath(
-                './td[3]/text()').extract()
+            item['fund_time'] = ''.join(line.xpath(
+                './td[3]/text()').extract()[0].split('-'))
             item['fund_net_value'] = line.xpath(
                 './td[4]/span/text()').extract()
             item['fund_day_rise'] = line.xpath(
@@ -37,17 +38,20 @@ class MySpider1(scrapy.Spider):
 
             yield item
 
-import re
+
 ###获取易方达基金投资组合
 class MySpider2(scrapy.Spider):
     # 设置name
     name = "funddetailspider"
+    fund_ids = []
+    with open(r'C:\Users\34587\fund\fund_id.txt') as f:
+        for line in f.readlines():
+            fund_ids.append(line.strip())
     start_urls = []
-    test=['110001','110002','110005','110009','110010','110011','110012','110013','110015','110022','110023','110025','110029','112002','161131','161132','506002','001018','001076','001136','001182','001184','001216','001217','001249','001285','001286','001314','001315','001342','001343','001373','001382','001433','001437','001438','001441','001442','001443','001444','001475','001513','001562','001603','001745','001746','001747','001748','001802','001803','001806','001807','001817','001818','001832','001835','001836','001856','001857','001898','002216','002217','002602','002910','003293','003839','003840','003882','003883','003961','003962','005438','005583','005827','005875','005876','005877','005955','005956','006013','006014','006533','007346','007548','007884','008283','008286','009049','009215','009216','009247','009248','009249','009250','009265','009341','009342','009412','009413','009689','009690','009808','009810','009811','009812','009813','009900','009901','009902','009903','010013','010317','010340','010387','010388','010389','010390','010650','000404','000436','000603']
-    for t in test:
+    for fund_id in fund_ids:
         for year in range(2010,2021):
             for type in [0,1,3,4]:
-                fund_url = "http://query2.efunds.com.cn/website/assetinfo_detail.jsp?fundcode="+str(t)+"&reportYear="+str(year)+"&reportType="+str(type)
+                fund_url = "http://query2.efunds.com.cn/website/assetinfo_detail.jsp?fundcode="+str(fund_id)+"&reportYear="+str(year)+"&reportType="+str(type)
                 start_urls.append(fund_url)
     # 编写爬取方法
 

@@ -1,0 +1,30 @@
+1、统计某季度易方达所有基金的持仓股票从高到低排序
+SELECT * FROM 
+(SELECT fund_stock_code,FUND_STOCK_NAME,COUNT(*) CNT 
+FROM TS_FUND_DAILY A
+WHERE FUND_TIME = '20200930'
+GROUP BY fund_stock_code,FUND_STOCK_NAME) B
+ORDER BY CNT DESC
+
+2、两个季度加仓情况对比
+SELECT B.*,D.CNT CNT_BEFORE FROM 
+(SELECT fund_stock_code,FUND_STOCK_NAME,COUNT(*) CNT 
+FROM TS_FUND_DAILY A
+WHERE FUND_TIME = '20200930'
+GROUP BY fund_stock_code,FUND_STOCK_NAME) B,
+(SELECT fund_stock_code,FUND_STOCK_NAME,COUNT(*) CNT 
+FROM TS_FUND_DAILY C
+WHERE FUND_TIME = '20200630'
+GROUP BY fund_stock_code,FUND_STOCK_NAME) D
+WHERE B.fund_stock_code = D.fund_stock_code
+  AND B.CNT > D.CNT
+ORDER BY B.CNT DESC,D.CNT DESC
+
+3、两个季度基金加仓明细
+SELECT * 
+FROM ts_fund_daily A
+WHERE A.fund_time = '20200930'
+  AND NOT EXISTS(SELECT * FROM ts_fund_daily B WHERE B.fund_time = '20200630' AND A.fund_id = B.fund_id AND A.fund_stock_code = B.fund_stock_code)
+  AND A.fund_id = '005827'
+
+

@@ -11,8 +11,8 @@ class FundPipeline(object):
     def process_item(self, item, spider):
         return item
 
-
-class LvyouPipeline(object):
+###易方达基金
+class YFDPipeline(object):
     def __init__(self):
         # connection database
         self.connect = pymysql.connect(host='localhost', user='root', passwd='cmcc1234',
@@ -24,10 +24,17 @@ class LvyouPipeline(object):
     def process_item(self, item, spider):
         # sql语句
         try:
-            insert_sql = """insert into ts_fund(fund_id, fund_time, fund_stock_rank, fund_stock_code, fund_stock_name,fund_stock_number,fund_stock_value,fund_stock_ratio) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"""
-            # 执行插入数据到数据库操作
-            self.cursor.execute(insert_sql, (item['fund_id'], item['fund_time'], item['fund_stock_rank'], item['fund_stock_code'],
-                                             item['fund_stock_name'], item['fund_stock_number'], item['fund_stock_value'], item['fund_stock_ratio']))
+            if spider.name == 'funddetailspider':
+                insert_sql = """insert into ts_fund_daily(fund_id, fund_time, fund_stock_rank, fund_stock_code, fund_stock_name,fund_stock_number,fund_stock_value,fund_stock_ratio) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"""
+                # 执行插入数据到数据库操作
+                self.cursor.execute(insert_sql, (item['fund_id'], item['fund_time'], item['fund_stock_rank'], item['fund_stock_code'],
+                                                 item['fund_stock_name'], item['fund_stock_number'], item['fund_stock_value'], item['fund_stock_ratio']))
+            elif spider.name == 'fundspider':
+                insert_sql = """insert into ts_fund(fund_id, fund_time, fund_name, fund_net_value, fund_day_rise,fund_this_year_rise,fund_year_rise,fund_risk) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"""
+                # 执行插入数据到数据库操作
+                self.cursor.execute(insert_sql, (
+                item['fund_id'], item['fund_time'], item['fund_name'], item['fund_net_value'],
+                item['fund_day_rise'], item['fund_this_year_rise'], item['fund_year_rise'], item['fund_risk']))
             # 提交，不进行提交无法保存到数据库
             self.connect.commit()
         except:
