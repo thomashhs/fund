@@ -3,6 +3,8 @@ from fund.items import FundItem
 from fund.items import FundDetailItem
 from fund.items import ZOFundItem
 from fund.items import ZOFundDetailItem
+from fund.items import HTFFundItem
+from fund.items import HTFFundDetailItem
 import re
 
 ###获取易方达基金总体情况
@@ -139,10 +141,14 @@ class MySpider4(scrapy.Spider):
 
     def parse(self, response):
         item = ZOFundDetailItem()
-        for line in response.xpath('(//table[@class="zcfb"])[3]/tr'):
+        url = response.url
+        fund_id = url.split('/')[-1][:6]
+
+        for line in response.xpath('(//table[@class="zcfb"])[3]/tr[position()>1]'):
             # 初始化item对象保存爬取的信息
             # 这部分是爬取部分，使用xpath的方式选择信息，具体方法根据网页结构而定
-            print('world')
+            item['fund_id'] = fund_id
+            item['fund_time'] = '20200930'
             item['fund_stock_rank'] = line.xpath(
                 './td[1]/text()').extract()
             item['fund_stock_code'] = line.xpath(
@@ -150,6 +156,73 @@ class MySpider4(scrapy.Spider):
             item['fund_stock_name'] = line.xpath(
                 './td[3]/text()').extract()
             item['fund_stock_ratio'] = line.xpath(
+                './td[4]/text()').extract()
+
+            yield item
+
+
+
+###汇添富基金概况
+class MySpider5(scrapy.Spider):
+    # 设置name
+    name = "htffundspider"
+    # 填写爬取地址
+    start_urls = [
+        "http://www.99fund.com/",
+    ]
+
+    # 编写爬取方法
+    def parse(self, response):
+        item = HTFFundItem()
+        #股票型或混合型基金
+        cnt=0
+        for line in response.xpath('//*[@id="con_two_2" or @id="con_two_3"]/div/table/tbody/tr'):
+            # 初始化item对象保存爬取的信息
+            # 这部分是爬取部分，使用xpath的方式选择信息，具体方法根据网页结构而定
+            item['fund_name'] = line.xpath(
+                './td[1]/a/text()').extract()[0].strip()
+            item['fund_time'] = ''.join(line.xpath(
+                './td[2]/text()').extract()[0].strip().split('-'))
+            item['fund_id'] = line.xpath(
+                './td[1]/a/@href').extract()[0].strip().split('/')[-2]
+
+            yield item
+
+
+
+###获取汇添富基金投资组合
+class MySpider6(scrapy.Spider):
+    # 设置name
+    name = "htffunddetailspider"
+    fund_ids = []
+
+    with open(r'C:\Users\34587\fund\htf_fund_id.txt') as f:
+        for line in f.readlines():
+            fund_ids.append(line.strip())
+    start_urls = []
+    for fund_id in fund_ids:
+        fund_url = "http://www.99fund.com/main/products/pofund/"+fund_id+"/fundgk.shtml"
+        start_urls.append(fund_url)
+    # 编写爬取方法
+
+    def parse(self, response):
+        item = HTFFundDetailItem()
+        url = response.url
+        fund_id = url.split('/')[-2]
+        for line in response.xpath('//table[@id="sdgpcc_table"]/tr[position()>1]'):
+            # 初始化item对象保存爬取的信息
+            # 这部分是爬取部分，使用xpath的方式选择信息，具体方法根据网页结构而定
+            item['fund_id'] = fund_id
+            item['fund_time'] = '20200930'
+            item['fund_stock_rank'] = line.xpath(
+                './td[1]/text()').extract()
+            item['fund_stock_code'] = line.xpath(
+                './td[2]/span/text()').extract()
+            item['fund_stock_name'] = line.xpath(
+                './td[2]/p/text()').extract()
+            item['fund_stock_ratio'] = line.xpath(
+                './td[3]/text()').extract()
+            item['fund_stock_compare'] = line.xpath(
                 './td[4]/text()').extract()
 
             yield item

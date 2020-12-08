@@ -52,3 +52,22 @@ class ZOFundDetailItem(scrapy.Item):
     fund_stock_code = scrapy.Field()
     fund_stock_name = scrapy.Field()
     fund_stock_ratio = scrapy.Field()
+
+
+###汇添富基金概况
+class HTFFundItem(scrapy.Item):
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    fund_name = scrapy.Field()
+    fund_id = scrapy.Field()
+    fund_time = scrapy.Field()
+
+###汇添富基金组合
+class HTFFundDetailItem(scrapy.Item):
+    fund_id = scrapy.Field()
+    fund_time = scrapy.Field()
+    fund_stock_rank = scrapy.Field()
+    fund_stock_code = scrapy.Field()
+    fund_stock_name = scrapy.Field()
+    fund_stock_ratio = scrapy.Field()
+    fund_stock_compare = scrapy.Field()
