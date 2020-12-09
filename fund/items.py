@@ -87,3 +87,17 @@ class JYSLDFundDetailItem(scrapy.Item):
     fund_time = scrapy.Field()
     fund_stock_name = scrapy.Field()
     fund_stock_ratio = scrapy.Field()
+
+###天天基金概况
+class TTFundItem(scrapy.Item):
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    fund_name = scrapy.Field()
+    fund_id = scrapy.Field()
+
+###天天基金组合
+class TTFundDetailItem(scrapy.Item):
+    fund_id = scrapy.Field()
+    fund_time = scrapy.Field()
+    fund_stock_name = scrapy.Field()
+    fund_stock_ratio = scrapy.Field()

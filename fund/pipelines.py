@@ -63,6 +63,19 @@ class YFDPipeline(object):
                 self.cursor.execute(insert_sql, (
                 item['fund_id'], item['fund_time'], item['fund_stock_rank'], item['fund_stock_code'],
                 item['fund_stock_name'], item['fund_stock_ratio'], item['fund_stock_compare']))
+            ###天天基金网
+            elif spider.name == 'ttfundspider':
+                insert_sql = """insert into tt_ts_fund(fund_id, fund_name) VALUES (%s,%s)"""
+                # 执行插入数据到数据库操作
+                self.cursor.execute(insert_sql, (
+                    item['fund_id'], item['fund_name']))
+
+            elif spider.name == 'ttfunddetailspider':
+                insert_sql = """insert into tt_ts_fund_daily(fund_id, fund_time, fund_stock_name,fund_stock_ratio) VALUES (%s,%s,%s,%s)"""
+                # 执行插入数据到数据库操作
+                self.cursor.execute(insert_sql, (
+                item['fund_id'], item['fund_time'],
+                item['fund_stock_name'], item['fund_stock_ratio']))
             # 提交，不进行提交无法保存到数据库
             self.connect.commit()
         except:

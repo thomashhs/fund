@@ -1,4 +1,6 @@
-import re
+fund_ids=[]
+with open(r'C:\Users\34587\fund\jysld_fund_id.txt') as f:
+    for line in f.readlines():
+        fund_ids.append(line.strip())
 
-test="交银核心资产006202"
-print(re.findall('\d+',test))
+print(len(fund_ids))
