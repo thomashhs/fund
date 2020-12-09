@@ -5,6 +5,8 @@ from fund.items import ZOFundItem
 from fund.items import ZOFundDetailItem
 from fund.items import HTFFundItem
 from fund.items import HTFFundDetailItem
+from fund.items import JYSLDFundItem
+from fund.items import JYSLDFundDetailItem
 import re
 
 ###获取易方达基金总体情况
@@ -224,5 +226,66 @@ class MySpider6(scrapy.Spider):
                 './td[3]/text()').extract()
             item['fund_stock_compare'] = line.xpath(
                 './td[4]/text()').extract()
+
+            yield item
+
+
+
+###交银施罗德基金概况
+class MySpider7(scrapy.Spider):
+    # 设置name
+    name = "jysldfundspider"
+    # 填写爬取地址
+    start_urls = [
+        "https://www.fund001.com/",
+    ]
+
+    # 编写爬取方法
+    def parse(self, response):
+        item = JYSLDFundItem()
+        #股票型或混合型基金
+        cnt=0
+        for line in response.xpath('//*[@id="table_th_2"]/tbody/tr'):
+            # 初始化item对象保存爬取的信息
+            # 这部分是爬取部分，使用xpath的方式选择信息，具体方法根据网页结构而定
+            item['fund_name'] = line.xpath(
+                './td[1]/a/span/text()[1]').extract()[0].strip()[:-6]
+            item['fund_id'] = line.xpath(
+                './td[1]/a/span/text()[1]').extract()[0].strip()[-6:]
+            item['fund_time'] = ''.join(line.xpath(
+                './td[4]/text()').extract()[0].strip().split('-'))
+            item['fund_type'] = line.xpath(
+                './td[3]/text()').extract()[0].strip()
+            yield item
+
+
+###获取交银施罗德基金投资组合
+class MySpider8(scrapy.Spider):
+    # 设置name
+    name = "jysldfunddetailspider"
+    fund_ids = []
+
+    with open(r'C:\Users\34587\fund\jysld_fund_id.txt') as f:
+        for line in f.readlines():
+            fund_ids.append(line.strip())
+    start_urls = []
+    for fund_id in fund_ids:
+        fund_url = "https://www.fund001.com/fund/"+fund_id+"/index.shtml"
+        start_urls.append(fund_url)
+    # 编写爬取方法
+
+    def parse(self, response):
+        item = JYSLDFundDetailItem()
+        url = response.url
+        fund_id = url.split('/')[-2]
+        for line in response.xpath('(//table[@class="table_xyqk"])[2]/tr[position()>1]'):
+            # 初始化item对象保存爬取的信息
+            # 这部分是爬取部分，使用xpath的方式选择信息，具体方法根据网页结构而定
+            item['fund_id'] = fund_id
+            item['fund_time'] = '20200930'
+            item['fund_stock_name'] = line.xpath(
+                './td[1]/text()').extract()[0].strip()
+            item['fund_stock_ratio'] = line.xpath(
+                './td[2]/text()').extract()[0].strip()
 
             yield item

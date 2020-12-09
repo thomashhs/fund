@@ -1,3 +1,4 @@
-url="https://www.zofund.com/index2015/004812.shtml"
+import re
 
-print(url.split('/')[-1][:6])
+test="交银核心资产006202"
+print(re.findall('\d+',test))
