@@ -47,8 +47,6 @@ class MySpider2(scrapy.Spider):
         fund_url = "http://fund.eastmoney.com/"+fund_id+".html"
         start_urls.append(fund_url)
     # 编写爬取方法
-    with open(r'C:\Users\34587\fund\log.txt','w') as f:
-        f.write(str(start_urls))
 
     def parse(self, response):
         item = TTFundDetailItem()

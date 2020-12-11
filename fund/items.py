@@ -101,3 +101,14 @@ class TTFundDetailItem(scrapy.Item):
     fund_time = scrapy.Field()
     fund_stock_name = scrapy.Field()
     fund_stock_ratio = scrapy.Field()
+
+###测试用
+class TESTItem(scrapy.Item):
+    author = scrapy.Field()
+    text = scrapy.Field()
+
+###测试用
+class TESTAUTHORItem(scrapy.Item):
+    name = scrapy.Field()
+    birthday = scrapy.Field()
+    bio = scrapy.Field()
