@@ -6,6 +6,7 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
 import pymysql
+from scrapy.pipelines.files import FilesPipeline
 
 class FundPipeline(object):
     def process_item(self, item, spider):
@@ -85,3 +86,12 @@ class YFDPipeline(object):
         # 关闭游标和连接
         self.cursor.close()
         self.connect.close()
+
+from os.path import basename,dirname,join
+from urllib.parse import urlparse
+
+class MyFilesPipeline(FilesPipeline):
+    def file_path(self, request, response=None, info=None):
+        path = urlparse(request.url).path
+        path = join(basename(dirname(path)),basename(path))
+        return path

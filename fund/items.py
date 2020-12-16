@@ -112,3 +112,27 @@ class TESTAUTHORItem(scrapy.Item):
     name = scrapy.Field()
     birthday = scrapy.Field()
     bio = scrapy.Field()
+
+###测试用
+class TESTFILEItem(scrapy.Item):
+    file_urls = scrapy.Field()
+    files = scrapy.Field()
+
+###测试用
+class TESTIMAGEItem(scrapy.Item):
+    image_urls = scrapy.Field()
+    images = scrapy.Field()
+
+###测试用
+class TESTLOGINItem(scrapy.Item):
+    info = scrapy.Field()
+
+###豆瓣电影
+class DoubanMovieItem(scrapy.Item):
+    director = scrapy.Field()
+    writer = scrapy.Field()
+    actor = scrapy.Field()
+    classify = scrapy.Field()
+    area = scrapy.Field()
+    open_dt = scrapy.Field()
+    rate = scrapy.Field()

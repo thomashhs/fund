@@ -1,2 +1,8 @@
-20201210
-1、后期考虑可以优化Item子类，通过扩展的方式减少代码重复量（精通Scrapy网络爬虫 P44）
+项目1：爬取豆瓣所有电影信息
+
+20201216
+1、https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&start=0
+根据该网址可提取JSON数据中含有电影详情页
+2、由于豆瓣具有403返回码，因此在settings.py中增加user agent
+USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'
+

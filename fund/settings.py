@@ -66,8 +66,13 @@ ROBOTSTXT_OBEY = False
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'fund.pipelines.FundPipeline': 300,
+#    'scrapy.pipelines.images.ImagesPipeline': 1,
+#    'fund.pipelines.MyFilesPipeline':1,
 #    'fund.pipelines.YFDPipeline':400,
 }
+
+FILES_STORE = 'D:\\example'
+IMAGES_STORE = 'D:\\download_images'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -89,3 +94,4 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'

@@ -1,3 +1,2 @@
-test="abc"
-test+='/'
-print(test)
+from scrapy import cmdline
+cmdline.execute("scrapy crawl testspider5".split())

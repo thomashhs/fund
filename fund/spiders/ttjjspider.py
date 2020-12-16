@@ -64,3 +64,33 @@ class MySpider2(scrapy.Spider):
                 './td[2]/text()').extract()[0].strip()
 
             yield item
+
+
+###天天基金总体情况（改写）
+###获取天天基金总体情况
+class MySpider3(scrapy.Spider):
+    # 设置name
+    name = "ttfundspider-2"
+    # 填写爬取地址
+
+    start_urls = []
+    # 股票型一共有8页
+    for i in range(1,9):
+        start_urls.append("http://fund.eastmoney.com/Data/Fund_JJJZ_Data.aspx?t=1&lx=2&letter=&gsid=&text=&sort=zdf,desc&page="+str(i)+",200&dt=1607515044664&atfc=&onlySale=0")
+    # 混合型一共有8页
+    for i in range(1,24):
+        start_urls.append(
+            "http://fund.eastmoney.com/Data/Fund_JJJZ_Data.aspx?t=1&lx=3&letter=&gsid=&text=&sort=zdf,desc&page=" + str(
+                i) + ",200&dt=1607520324122&atfc=&onlySale=0")
+
+    start_urls = ["http://fund.eastmoney.com/Data/Fund_JJJZ_Data.aspx?t=1&lx=2&letter=&gsid=&text=&sort=zdf,desc&page=0,200&dt=1607515044664&atfc=&onlySale=0"]
+    # 编写爬取方法
+    def parse(self, response):
+        test = response.text
+        test = re.findall('datas:\[(.*?)\],count', test)[0]
+        test = literal_eval(test)
+
+        for t in test:
+            fund_id = t[0]
+            url = 'http://fundf10.eastmoney.com/FundArchivesDatas.aspx?type=jjcc&code='+fund_id+'&topline=10&year=2020&month=&rt=0.19146287958036323'
+            print(url)
