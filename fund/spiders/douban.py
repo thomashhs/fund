@@ -6,15 +6,19 @@ class MySpider1(scrapy.Spider):
     # 设置name
     name = "doubanmovie"
     # 填写爬取地址
+    start_urls = []
 
-    start_urls = ['https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&start=0']
+    for i in range(0,1000,20):
+        url = 'https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&start='+str(i)
+        start_urls.append(url)
 
     def parse(self, response):
         infos = json.loads(response.body.decode('utf-8'))
         cnt=0
         for info in infos['data']:
             movie_url_detail = info['url']
-            yield scrapy.Request('https://movie.douban.com/subject/30257787/',callback=self.parse_movie)
+            print(movie_url_detail)
+            yield scrapy.Request(movie_url_detail,callback=self.parse_movie)
 
     def parse_movie(self, response):
         line = response.xpath('//div[@id="info"]')

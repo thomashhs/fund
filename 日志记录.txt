@@ -6,3 +6,19 @@
 2、由于豆瓣具有403返回码，因此在settings.py中增加user agent
 USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'
 
+20201218
+1、基本实现爬取电影相关信息，存在问题：爬取一定数量后会被豆瓣反爬机制禁止，需要针对该问题寻求改善方法；
+（1）修改settings.py延迟时间无效
+DOWNLOAD_DELAY = 2
+
+参考文档：
+官方：https://docs.scrapy.org/en/master/topics/practices.html#avoiding-getting-banned
+几种官方建议：
+1、动态设置User agent
+2、disable cookies
+3、使用DOWNLOAD_DELAY
+4、使用Google cache获取页面
+5、使用IP池
+6、使用分布式downloader，如Crawlera
+
+https://segmentfault.com/a/1190000013254085?utm_source=tag-newest
