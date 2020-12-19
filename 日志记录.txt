@@ -7,7 +7,7 @@
 USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36'
 
 20201218
-1、基本实现爬取电影相关信息，存在问题：爬取一定数量后会被豆瓣反爬机制禁止，需要针对该问题寻求改善方法；
+(未实现)1、基本实现爬取电影相关信息，存在问题：爬取一定数量后会被豆瓣反爬机制禁止，需要针对该问题寻求改善方法；
 （1）修改settings.py延迟时间无效
 DOWNLOAD_DELAY = 2
 
@@ -22,3 +22,7 @@ DOWNLOAD_DELAY = 2
 6、使用分布式downloader，如Crawlera
 
 https://segmentfault.com/a/1190000013254085?utm_source=tag-newest
+
+项目2：爬取豆瓣所有音乐信息
+20201219
+1、编写代码实现doubanmusic

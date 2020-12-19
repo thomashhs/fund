@@ -1,7 +1,10 @@
 import scrapy
 import json
 from fund.items import DoubanMovieItem
+from fund.items import DoubanMusicItem
+from scrapy.linkextractors import LinkExtractor
 
+###豆瓣电影
 class MySpider1(scrapy.Spider):
     # 设置name
     name = "doubanmovie"
@@ -49,5 +52,38 @@ class MySpider1(scrapy.Spider):
         item['movie_name'] = response.xpath('//span[@property="v:itemreviewed"]/text()').extract()
         #年份
         item['movie_year'] = response.xpath('//span[@class="year"]/text()').extract()
+
+        yield item
+
+###豆瓣音乐
+class MySpider2(scrapy.Spider):
+    # 设置name
+    name = "doubanmusic"
+    # 填写爬取地址
+    start_urls = ['https://music.douban.com/tag/流行']
+
+    def parse(self, response):
+        le = LinkExtractor(restrict_xpaths='//div[@class="pl2"]/a')
+        links = le.extract_links(response)
+
+
+        for link in links:
+            yield scrapy.Request(link.url,callback=self.parse_music)
+
+        next_page = response.xpath("//span[@class='next']/a/@href").extract_first()
+
+        if next_page is not None:
+            next_page = response.urljoin(next_page)
+            yield scrapy.Request(next_page, callback=self.parse)
+
+
+
+    def parse_music(self, response):
+        item = DoubanMusicItem()
+        #音乐名
+        item['music_name'] = response.xpath('//*[@id="wrapper"]/h1/span/text()').extract_first()
+        #音乐信息
+        music_info = response.xpath('.//div[@class="ckd-collect"]')
+        item['music_info'] = music_info.xpath('string(.)').extract_first().strip()
 
         yield item

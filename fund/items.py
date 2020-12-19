@@ -127,6 +127,8 @@ class TESTIMAGEItem(scrapy.Item):
 class TESTLOGINItem(scrapy.Item):
     info = scrapy.Field()
 
+
+
 ###豆瓣电影
 class DoubanMovieItem(scrapy.Item):
     director = scrapy.Field()
@@ -140,3 +142,9 @@ class DoubanMovieItem(scrapy.Item):
     movie_summary = scrapy.Field()
     movie_name = scrapy.Field()
     movie_year = scrapy.Field()
+
+
+###豆瓣音乐
+class DoubanMusicItem(scrapy.Item):
+    music_name = scrapy.Field()
+    music_info = scrapy.Field()
